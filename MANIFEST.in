@@ -1,0 +1,4 @@
+graft vendor
+graft tests
+include src/cmark_render/*.pyi src/cmark_render/py.typed
+global-exclude __pycache__ *.py[oc]

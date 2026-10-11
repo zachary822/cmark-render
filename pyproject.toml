@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cmark-render"
+version = "0.1.0"
+description = "Fast, leak-free markdown to HTML with a vendored cmark-gfm (tables, ~~strikethrough~~, raw HTML)."
+readme = "README.md"
+requires-python = ">=3.14"
+license = "BSD-2-Clause"
+license-files = ["LICENSE", "vendor/cmark-gfm/COPYING"]
+authors = [{ name = "Zachary Juang" }]
+keywords = ["markdown", "commonmark", "cmark", "gfm"]
+classifiers = [
+    "Programming Language :: C",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Source = "https://github.com/zachary822/cmark-render"
+
+[tool.setuptools.package-data]
+cmark_render = ["py.typed", "*.pyi"]
+
+[tool.setuptools.exclude-package-data]
+cmark_render = ["*.c"]
+
+[tool.cibuildwheel]
+build = "cp314-*"
+# GIL builds on glibc only.
+skip = "cp314t-* *-musllinux_*"
+test-command = "python -m unittest discover -s {project}/tests -v"
+
+[tool.uv]
+# uv only rebuilds the project when a cache key changes; include the C.
+cache-keys = [
+    { file = "pyproject.toml" },
+    { file = "setup.py" },
+    { file = "src/**/*.c" },
+    { file = "vendor/**/*" },
+]

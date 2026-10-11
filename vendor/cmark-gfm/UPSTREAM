@@ -1,0 +1,6 @@
+https://github.com/github/cmark-gfm at 27d942c8b0a62d192f616e5bf3578f4b6a89e180
+(0.29.0.gfm.13-4-g27d942c, 2026-09-28)
+
+Copied: src/ (without main.c, the CLI) and extensions/. generated/ holds the
+headers CMake writes at configure time (cmake -DCMARK_TESTS=OFF), produced
+from the same commit.
