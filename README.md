@@ -63,9 +63,10 @@ An unknown bit raises `ValueError`.
 Every render frees its syntax tree and rendered HTML, so memory stays flat
 however many documents you render.
 
-It is safe to use with threads and `fork()`. Renders run without the GIL
-but one at a time, because cmark-gfm keeps a global table of special
-characters that changes during each parse. A `pthread_atfork` handler stops a
+It is safe to use with threads and `fork()`. Renders run without the GIL.
+Parsing runs one at a time, because cmark-gfm keeps a global table of special
+characters that changes during each parse, but writing the HTML runs in
+parallel. A `pthread_atfork` handler stops a
 child process from inheriting a held lock.
 
 ## Install

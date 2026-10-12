@@ -33,7 +33,8 @@ static cmark_syntax_extension *extensions[N_EXTENSIONS];
 /* While parsing inlines, cmark adds each extension's characters ("~" for
  * strikethrough) to a global table and clears them after
  * (cmark_manage_extensions_special_characters), so a concurrent parse could
- * lose its strikethrough. Renders run without the GIL, one at a time. */
+ * lose its strikethrough. Renders run without the GIL, and parses one at a
+ * time. */
 static pthread_mutex_t render_lock = PTHREAD_MUTEX_INITIALIZER;
 
 /* A fork while another thread holds render_lock would leave the child with a
@@ -125,13 +126,15 @@ static PyObject *render_html(PyObject *module, PyObject *args,
   cmark_parser_feed(parser, text, (size_t)length);
   /* The parser hands the tree to the caller; cmark_parser_free leaves it. */
   cmark_node *document = cmark_parser_finish(parser);
+  /* finish has cleared the special characters again, and rendering only
+   * reads the tree and the extensions, so it runs alongside other parses. */
+  pthread_mutex_unlock(&render_lock);
   if (document != NULL) {
     html = cmark_render_html(document, options,
                              cmark_parser_get_syntax_extensions(parser));
     cmark_node_free(document);
   }
   cmark_parser_free(parser);
-  pthread_mutex_unlock(&render_lock);
   Py_END_ALLOW_THREADS
 
   if (html == NULL) {

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cmark-render"
-version = "0.2.0"
+version = "0.2.1"
 description = "Fast, leak-free markdown to HTML with a vendored cmark-gfm (tables, ~~strikethrough~~, raw HTML)."
 readme = "README.md"
 requires-python = ">=3.14"
