@@ -1,0 +1,4 @@
+BasedOnStyle: LLVM
+# Py_BEGIN/END_ALLOW_THREADS open and close a block; without this, everything
+# after them is indented.
+StatementMacros: [Py_BEGIN_ALLOW_THREADS, Py_END_ALLOW_THREADS]
